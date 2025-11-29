@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Register — ChargeShare</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <div class="container" style="padding:40px 18px;">
+    <h2>Create Account</h2>
+    <form id="registerForm" style="max-width:520px;margin-top:16px">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input id="name" type="text" required style="padding:8px;width:100%;margin-top:6px"/>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input id="email" type="email" required style="padding:8px;width:100%;margin-top:6px"/>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input id="password" type="password" required style="padding:8px;width:100%;margin-top:6px"/>
+      </div>
+      <div class="form-group">
+        <label>I am a</label>
+        <select id="type" style="padding:8px;width:100%;margin-top:6px">
+          <option value="traveler">EV Traveler</option>
+          <option value="owner">Charger Owner</option>
+          <option value="both">Both</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" type="submit">Register</button>
+      <a href="login.html" style="display:inline-block;margin-left:12px">Have an account? Login</a>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const type = document.getElementById('type').value;
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      if(users.some(u=>u.email === email)){ alert('Email already registered'); return; }
+      users.push({name,email,password,type});
+      localStorage.setItem('users', JSON.stringify(users));
+      localStorage.setItem('currentUser', JSON.stringify({name,email,type}));
+      // redirect to correct dashboard
+      if(type === 'owner') location.href = '../dashboards/owner_dashboard.html';
+      else location.href = '../dashboards/user_dashboard.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Owner Dashboard — ChargeShare</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <div class="container" style="padding:30px 18px;">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h2>Owner Dashboard</h2>
+      <div>
+        <button class="btn btn-outline" id="backHome">Home</button>
+        <button class="btn btn-primary" id="ownerLogout">Logout</button>
+      </div>
+    </div>
+
+    <h3 style="margin-top:18px">My Chargers</h3>
+    <div id="ownerChargers" style="margin-top:12px"></div>
+
+    <h3 style="margin-top:18px">Manage Bookings</h3>
+    <div id="ownerBookings" style="margin-top:12px"></div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if(!user || user.type !== 'owner') { alert('Owner access only'); location.href='../auth/login.html'; }
+    document.getElementById('backHome').addEventListener('click', ()=>location.href='../index.html');
+    document.getElementById('ownerLogout').addEventListener('click', ()=>{ localStorage.removeItem('currentUser'); location.href='../index.html'; });
+
+    // For demo: owner chargers are items in CHARGERS that match nothing (we'll assume owner added all home type)
+    const all = JSON.parse(localStorage.getItem('chargers') || 'null');
+    // If not present, initialize using CHARGERS from main page source by fetching them through sessionStorage trick:
+    let myChargers = [];
+    // try to get global CHARGERS embedded in index via sessionStorage (if user visited index)
+    try {
+      const seed = JSON.parse(localStorage.getItem('seedChargers') || 'null');
+      if(seed) myChargers = seed.filter(c=>c.type === 'home' || c.type === 'business' || c.type === 'fast').map(c=>({...c, ownerEmail:user.email}));
+      else {
+        // fallback: create an empty placeholder
+        myChargers = [{id: 'local-1', title:'Your New Charger', city:'Your City', pincode:'000000', type:'home', price:20, img:''}];
+      }
+    } catch(e) {
+      myChargers = [{id: 'local-1', title:'Your New Charger', city:'Your City', pincode:'000000', type:'home', price:20, img:''}];
+    }
+
+    const oc = document.getElementById('ownerChargers');
+    myChargers.forEach(ch=>{
+      const el = document.createElement('div');
+      el.className='booking-card';
+      el.innerHTML = `<strong>${ch.title}</strong><div style="color:var(--gray)">${ch.city} · ${ch.pincode}</div><div style="margin-top:8px">Type: ${ch.type} · Price: ₹${ch.price}</div>`;
+      oc.appendChild(el);
+    });
+
+    // bookings (all bookings for chargers that belong to owner)
+    const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+    const ownerBookings = bookings.filter(b => {
+      // if our myChargers include chargerId, match
+      return myChargers.some(c => Number(c.id) === Number(b.chargerId) || c.title === b.title);
+    });
+
+    const ob = document.getElementById('ownerBookings');
+    if(!ownerBookings.length) ob.innerHTML = '<p>No bookings yet.</p>';
+    else ownerBookings.forEach(b=>{
+      const el = document.createElement('div');
+      el.className='booking-card';
+      el.innerHTML = `<div style="display:flex;justify-content:space-between"><strong>${b.title}</strong><span>${b.status}</span></div>
+        <div style="margin-top:10px">${b.date} · ${b.user}</div>
+        <div style="margin-top:10px"><button class="btn btn-primary" onclick="confirmBooking(${b.id})">Confirm</button>
+          <button class="btn" style="margin-left:8px" onclick="cancelBooking(${b.id})">Cancel</button></div>`;
+      ob.appendChild(el);
+    });
+
+    window.confirmBooking = function(id){
+      let bookingsAll = JSON.parse(localStorage.getItem('bookings') || '[]');
+      bookingsAll = bookingsAll.map(b=> b.id === id ? {...b, status:'confirmed'} : b);
+      localStorage.setItem('bookings', JSON.stringify(bookingsAll));
+      alert('Booking confirmed');
+      location.reload();
+    };
+    window.cancelBooking = function(id){
+      let bookingsAll = JSON.parse(localStorage.getItem('bookings') || '[]');
+      bookingsAll = bookingsAll.map(b=> b.id === id ? {...b, status:'cancelled'} : b);
+      localStorage.setItem('bookings', JSON.stringify(bookingsAll));
+      alert('Booking cancelled');
+      location.reload();
+    };
+  </script>
+</body>
+</html>

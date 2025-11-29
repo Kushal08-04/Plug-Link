@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Login — ChargeShare</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <div class="container" style="padding:40px 18px;">
+    <h2>Log In</h2>
+    <form id="loginForm" style="max-width:420px;margin-top:16px">
+      <div class="form-group">
+        <label>Email</label>
+        <input id="email" type="email" required style="padding:8px;width:100%;margin-top:6px"/>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input id="password" type="password" required style="padding:8px;width:100%;margin-top:6px"/>
+      </div>
+      <button class="btn btn-primary" type="submit">Login</button>
+      <a href="register.html" style="display:inline-block;margin-left:12px">Create account</a>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const user = users.find(u=>u.email === email && u.password === password);
+      if(!user){ alert('Invalid credentials. Try demo: traveler@demo.com / pass123 or owner@demo.com / pass123'); return; }
+      localStorage.setItem('currentUser', JSON.stringify({name:user.name,email:user.email,type:user.type}));
+      // Redirect to dashboard based on user type
+      if(user.type === 'owner') location.href = '../dashboards/owner_dashboard.html';
+      else location.href = '../dashboards/user_dashboard.html';
+    });
+  </script>
+</body>
+</html>

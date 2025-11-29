@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Plug Link — Find EV Chargers</title>
+
+  <!-- Fonts / Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- Local CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container header-container">
+      <div class="logo">
+        <i class="fas fa-bolt"></i>
+        <span>Plug Link</span>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html#home">Home</a></li>
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+          <li><a href="index.html#map-section">Find Chargers</a></li>
+          <li><a href="auth/register.html">List Your Charger</a></li>
+        </ul>
+      </nav>
+      <div class="auth-buttons">
+        <a class="btn btn-outline" href="auth/login.html">Log In</a>
+        <a class="btn btn-primary" href="auth/register.html">Sign Up</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <div class="container hero-inner">
+      <h1>Power Your Journey — Share Your Charge</h1>
+      <p>Find nearby chargers, book a slot, and support EV adoption.</p>
+
+      <div class="search-box">
+        <input id="searchInput" type="text" placeholder="Search by city or pincode (e.g., Pune, 411001)" />
+        <button id="searchBtn"><i class="fas fa-search"></i> Search</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features">
+    <div class="container">
+      <div class="section-title">
+        <h2>Why ChargeShare?</h2>
+        <p>Earn by sharing your charger and remove range anxiety for EV drivers.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <h3>Find Chargers Nearby</h3>
+          <p>Interactive map with charger types and prices.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-dollar-sign"></i></div>
+          <h3>Earn Extra Income</h3>
+          <p>List your charger and receive payouts for sessions.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-car-battery"></i></div>
+          <h3>Reduce Pollution</h3>
+          <p>Support EV adoption and reduce vehicular emissions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="container">
+      <div class="section-title"><h2>How It Works</h2></div>
+      <div class="steps">
+        <div class="step"><div class="step-number">1</div><h3>Sign Up</h3></div>
+        <div class="step"><div class="step-number">2</div><h3>Find / List</h3></div>
+        <div class="step"><div class="step-number">3</div><h3>Book & Charge</h3></div>
+        <div class="step"><div class="step-number">4</div><h3>Pay & Review</h3></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Map Section -->
+  <section class="map-section" id="map-section">
+    <div class="container">
+      <div class="section-title"><h2>Find Chargers Near You</h2></div>
+
+      <div class="map-controls">
+        <div class="map-filters">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="fast">Fast</button>
+          <button class="filter-btn" data-filter="home">Home</button>
+          <button class="filter-btn" data-filter="business">Business</button>
+        </div>
+        <div><button class="btn btn-primary" id="locateMe"><i class="fas fa-location-arrow"></i> Locate Me</button></div>
+      </div>
+
+      <div id="map-container"><div id="map"></div></div>
+
+      <div class="chargers-grid" id="chargersGrid"></div>
+    </div>
+  </section>
+
+  <!-- CTA / Footer -->
+  <section class="cta">
+    <div class="container">
+      <h2>Ready to Share Your Charger?</h2>
+      <p>List your charger and help the EV community grow.</p>
+      <a class="btn btn-primary" href="auth/register.html">Get Started</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-content">
+      <div class="footer-column">
+        <h3>ChargeShare</h3>
+        <p>Connecting EV charger owners with travelers in need.</p>
+      </div>
+      <div class="footer-column">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#map-section">Find Chargers</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Support</h3>
+        <ul>
+          <li><a href="#">Help Center</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copyright">
+      &copy; <span id="year"></span> Plug Link
+    </div>
+  </footer>
+
+  <!-- JS libs: Leaflet -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Local JS -->
+  <script src="js/main.js"></script>
+</body>
+</html>

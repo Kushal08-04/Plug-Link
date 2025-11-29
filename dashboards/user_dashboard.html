@@ -1,0 +1,61 @@
+owner_dashboard<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>User Dashboard — ChargeShare</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <div class="container" style="padding:30px 18px;">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h2>User Dashboard</h2>
+      <div>
+        <button class="btn btn-outline" id="backHome">Home</button>
+        <button class="btn btn-primary" id="logout">Logout</button>
+      </div>
+    </div>
+
+    <h3 style="margin-top:18px">Current Bookings</h3>
+    <div id="currentBookings" style="margin-top:12px"></div>
+
+    <h3 style="margin-top:20px">Charging History</h3>
+    <div id="chargeHistory" style="margin-top:12px"></div>
+  </div>
+
+  <script>
+    // Check auth
+    const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    if(!user) { alert('Not logged in'); location.href = '../auth/login.html'; }
+    document.title = `${user.name} — Dashboard`;
+
+    document.getElementById('backHome').addEventListener('click', ()=>location.href='../index.html');
+    document.getElementById('logout').addEventListener('click', ()=>{
+      localStorage.removeItem('currentUser');
+      alert('Logged out');
+      location.href='../index.html';
+    });
+
+    // Load bookings
+    const bookings = JSON.parse(localStorage.getItem('bookings') || '[]').filter(b=>b.user === user.email);
+    const cb = document.getElementById('currentBookings');
+    if(!bookings.length) cb.innerHTML = '<p>No current bookings.</p>';
+    else bookings.forEach(b=>{
+      const el = document.createElement('div');
+      el.className = 'booking-card';
+      el.innerHTML = `<div style="display:flex;justify-content:space-between"><strong>${b.title}</strong><span>${b.status}</span></div>
+      <div style="margin-top:10px;color:var(--gray)">${b.date}</div>`;
+      cb.appendChild(el);
+    });
+
+    const history = bookings.filter(x=>x.status === 'completed');
+    const ch = document.getElementById('chargeHistory');
+    if(!history.length) ch.innerHTML = '<p>No history yet.</p>';
+    else history.forEach(h=>{
+      const el = document.createElement('div');
+      el.className='history-card';
+      el.innerHTML = `<strong>${h.title}</strong><div>${h.date}</div>`;
+      ch.appendChild(el);
+    });
+  </script>
+</body>
+</html>
